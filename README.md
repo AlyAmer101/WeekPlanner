@@ -43,7 +43,10 @@
 - **Daily Evaluation:** Automatically calculates your success percentage and assigns a grade (A, B, C...) based on task completion when you "Close the Day."
 - **Historical Reports:** Access your entire history organized by year and month. Review past weeks to analyze progress curves and patterns.
 
-### 💾 Data Sovereignty & Automation
+### � Interactive User Guide
+- **Comprehensive Tour:** A beautiful, built-in slider guide (available in AR/EN) that explains every hidden feature and power user command.
+
+### �💾 Data Sovereignty & Automation
 - **100% Private:** Your data never touches a server. It is stored locally in your browser (LocalStorage).
 - **Auto-Export:** A unique feature for desktop users to automatically save a JSON backup to a local folder daily.
 - **Manual Import/Export:** Seamlessly move your entire history between devices or browsers.
@@ -60,7 +63,13 @@
 ---
 
 ## 🚀 Getting Started
-The project requires no build process or installation:
+You can start using the **Week Planner** immediately in two ways:
+
+### 1. Instant Access (Recommended)
+Simply click the **[Live Demo](https://alyamer101.github.io/WeekPlanner/)** button at the top of this page to launch the app in your browser right away.
+
+### 2. Local Run
+No build process or installation is required:
 1. Clone or download this repository.
 2. Open `index.html` in any modern web browser.
 3. Define your goals and start winning your week!
