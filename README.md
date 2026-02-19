@@ -8,7 +8,7 @@
 ---
 
 ## 📋 Overview
-**Week Planner** (code-named *Planned Weak*) is a powerful, offline-first weekly task management application. Unlike generic todo lists, it enforces a "Vision First" philosophy—requiring you to define your major weekly goals before you can dive into daily tasks. It combines clean aesthetics with advanced productivity features like streaks, focus mode, and sub-tab organization.
+**Week Planner** is a powerful, offline-first weekly task management application. Unlike generic todo lists, it enforces a "Vision First" philosophy—requiring you to define your major weekly goals before you can dive into daily tasks. It combines clean aesthetics with advanced productivity features like streaks, focus mode, and sub-tab organization.
 
 ---
 
