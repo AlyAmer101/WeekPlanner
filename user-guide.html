@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week Planner | The Ultimate Guide</title>
+
+    <link rel="icon" type="image/png" href="media/tab-icon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="media/tab-icon/favicon.svg" />
+    <link rel="shortcut icon" href="media/tab-icon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="media/tab-icon/apple-touch-icon.png" />
+    <link rel="manifest" href="media/tab-icon/site.webmanifest" />
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0e14;
+            --card-bg: rgba(22, 27, 34, 0.85);
+            --border-color: rgba(48, 54, 61, 0.7);
+            --text-main: #e6edf3;
+            --text-muted: #8b949e;
+            --accent: #58a6ff;
+            --accent-glow: rgba(88, 166, 255, 0.3);
+            --accent-hover: #1f6feb;
+            --success: #3fb950;
+            --success-glow: rgba(63, 185, 80, 0.3);
+            --danger: #f85149;
+            --warning: #d29922;
+            --shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            --glass: blur(14px);
+            --gradient: linear-gradient(135deg, #58a6ff 0%, #1f6feb 100%);
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-color);
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(88, 166, 255, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(31, 111, 235, 0.05) 0%, transparent 20%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .slider-wrapper {
+            width: 100%;
+            max-width: 1024px;
+            height: 760px;
+            max-height: calc(100vh - 40px);
+            position: relative;
+            background: var(--card-bg);
+            backdrop-filter: var(--glass);
+            border: 1px solid var(--border-color);
+            border-radius: 36px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slider-content {
+            flex-grow: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 40px 60px;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.95) translateY(10px);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1) translateY(0);
+        }
+
+        .slide.prev {
+            opacity: 0;
+            transform: scale(1.05) translateY(-10px);
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 42px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 28px;
+            color: var(--accent);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        h2::after {
+            content: '';
+            flex-grow: 1;
+            height: 1px;
+            background: linear-gradient(to left, var(--border-color), transparent);
+        }
+
+        h3 {
+            font-size: 18px;
+            color: var(--text-main);
+            margin: 20px 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        p {
+            font-size: 17px;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .content-scroll {
+            overflow-y: auto;
+            flex-grow: 1;
+            padding-right: 15px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-color) transparent;
+        }
+
+        .content-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .content-scroll::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 10px;
+        }
+
+        ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        li {
+            padding: 12px 20px;
+            background: rgba(48, 54, 61, 0.3);
+            border-radius: 12px;
+            border: 1px solid transparent;
+            font-size: 15px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        li:hover {
+            background: rgba(48, 54, 61, 0.5);
+            border-color: var(--border-color);
+            transform: translateX(-5px);
+        }
+
+        li b {
+            color: var(--accent);
+        }
+
+        .info-card {
+            background: var(--accent-glow);
+            border-right: 4px solid var(--accent);
+            padding: 20px;
+            border-radius: 16px;
+            margin: 20px 0;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            animation: pulse 3s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(88, 166, 255, 0.1);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(88, 166, 255, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(88, 166, 255, 0);
+            }
+        }
+
+        .code-block {
+            background: #010409;
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            color: #7ee787;
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 15px 0;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Controls */
+        .slider-controls {
+            padding: 30px 60px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(17, 21, 28, 0.6);
+        }
+
+        .nav-btn {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 18px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--accent-glow);
+        }
+
+        .nav-btn:disabled {
+            filter: grayscale(1);
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .progress-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--border-color);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background: var(--accent);
+            width: 32px;
+        }
+
+        .lang-toggle {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: var(--card-bg);
+            backdrop-filter: var(--glass);
+            border: 1px solid var(--border-color);
+            color: var(--accent);
+            padding: 12px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 700;
+            z-index: 1000;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .lang-toggle:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .slide-icon {
+            font-size: 64px;
+            margin-bottom: 24px;
+            text-align: center;
+            filter: drop-shadow(0 0 12px var(--accent-glow));
+        }
+
+        /* Language Display Logic - Ultra specific to avoid hiding parent elements */
+        body:not(.en-mode) [lang="en"] {
+            display: none !important;
+        }
+
+        body.en-mode [lang="ar"] {
+            display: none !important;
+        }
+
+        body.en-mode {
+            direction: ltr;
+        }
+
+        .en-mode li:hover {
+            transform: translateX(5px);
+        }
+
+        .en-mode .info-card {
+            border-right: none;
+            border-left: 4px solid var(--accent);
+        }
+
+        .en-mode h2::after {
+            background: linear-gradient(to right, var(--border-color), transparent);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .feature-item {
+            background: rgba(48, 54, 61, 0.2);
+            padding: 18px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .feature-item:hover {
+            background: rgba(48, 54, 61, 0.35);
+            border-color: var(--accent);
+        }
+
+        .feature-item h4 {
+            color: var(--accent);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+        }
+
+        @media (max-width: 900px) {
+            .slider-wrapper {
+                height: 100vh;
+                border-radius: 0;
+                max-height: 100vh;
+            }
+
+            .slide {
+                padding: 40px 24px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 34px;
+            }
+
+            .nav-btn span {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <button class="lang-toggle" onclick="toggleLang()">
+        <span>🌐</span>
+        <span lang="ar">English</span>
+        <span lang="en">العربية</span>
+    </button>
+
+    <div class="slider-wrapper">
+        <div class="slider-content" id="sliderContent">
+
+            <!-- Slide 0: Welcome -->
+            <div class="slide active">
+                <div class="slide-icon">🚀</div>
+                <h1 lang="ar">دليلك نحو الإتقان الكامل</h1>
+                <h1 lang="en">The Journey to Mastery</h1>
+                <p lang="ar" style="text-align: center; font-size: 20px; max-width: 750px; margin: 0 auto;">
+                    مرحباً بك في <b>Week Planner</b>. هذا ليس مجرد تطبيق مهام، بل هو محرك إنتاجيتك الشخصي. خلال الدقائق
+                    القادمة، سنكشف لك كل خبايا وأدوات النظام التي صُممت لتجعل وقتك تحت سيطرتك الكاملة.
+                </p>
+                <p lang="en" style="text-align: center; font-size: 20px; max-width: 750px; margin: 0 auto;">
+                    Welcome to <b>Week Planner</b>. This isn't just a todo app; it's your personal productivity engine.
+                    In the next few minutes, we'll reveal every secret and tool of the system designed to put time
+                    completely in your control.
+                </p>
+                <div class="info-card">
+                    <span style="font-size: 28px;">💡</span>
+                    <div>
+                        <p lang="ar" style="margin:0; color:var(--text-main); font-weight: 600;">تلميح احترافي:</p>
+                        <p lang="ar" style="margin:0; color:var(--text-muted);">استخدم <b>أسهم لوحة المفاتيح</b> (يمنة
+                            ويسرة) للتنقل السريع بين صفحات هذا الدليل.</p>
+                        <p lang="en" style="margin:0; color:var(--text-main); font-weight: 600;">Pro Tip:</p>
+                        <p lang="en" style="margin:0; color:var(--text-muted);">Use <b>Keyboard Arrow Keys</b>
+                            (Left/Right) to navigate swiftly through this guide.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 1: Planning Philosophy -->
+            <div class="slide">
+                <div class="slide-icon">🔐</div>
+                <h2 lang="ar">1. فلسفة القفل: الرؤية أولاً</h2>
+                <h2 lang="en">1. The Lock: Vision First</h2>
+                <div class="content-scroll">
+                    <p lang="ar">العمل بدون هدف هو مجرد هدر للطاقة. لهذا العقل المدبر، تبدأ الرحلة دائماً بالأسبوع
+                        المقفل.</p>
+                    <ul lang="ar">
+                        <li><b>إلزامية التخطيط:</b> لن تفتح الأيام ولن تتمكن من إضافة مهام حتى تضع 3 أهداف كبرى للأسبوع
+                            على الأقل.</li>
+                        <li><b>تحقيق التركيز:</b> هذا "القفل" يحميك من الغرق في التفاصيل الصغيرة قبل رؤية الصورة
+                            الكبيرة.</li>
+                        <li><b>تعديل المسار:</b> يمكنك مراجعة وتعديل أهدافك في أي لحظة عبر زر "الأهداف" في الهيدر.</li>
+                    </ul>
+                    <p lang="en">Working without a goal is just energy waste. For this mastermind app, the journey
+                        always starts with a Locked Week.</p>
+                    <ul lang="en">
+                        <li><b>Mandatory Planning:</b> Days won't unlock and tasks can't be added until you define at
+                            least 3 core weekly objectives.</li>
+                        <li><b>Ensuring Focus:</b> This "Lock" prevents you from drowning in small details before seeing
+                            the big picture.</li>
+                        <li><b>Course Correction:</b> Review and edit your goals anytime via the "Goals" button in the
+                            header.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Slide 2: Task Mastery -->
+            <div class="slide">
+                <div class="slide-icon">⚡</div>
+                <h2 lang="ar">2. إتقان إدارة المهام</h2>
+                <h2 lang="en">2. Task Management Mastery</h2>
+                <div class="content-scroll">
+                    <div class="feature-grid">
+                        <div class="feature-item">
+                            <h4 lang="ar">⌨️ الإضافة الخارقة (متعددة)</h4>
+                            <h4 lang="en">⌨️ Super Add (Multi-line)</h4>
+                            <p lang="ar" style="font-size: 15px;">اكتب مهام متعددة مفصولة بـ <b>فواصل</b> أو <b>أسطر
+                                    جديدة</b> (Shift+Enter). سيتم إضافتها جميعاً دفعة واحدة!</p>
+                            <p lang="en" style="font-size: 15px;">Type multiple tasks separated by <b>commas</b> or
+                                <b>new lines</b> (Shift+Enter). We automatically split them for you!
+                            </p>
+                        </div>
+                        <div class="feature-item">
+                            <h4 lang="ar">🖐️ ترتيب المهام</h4>
+                            <h4 lang="en">🖐️ Reordering</h4>
+                            <p lang="ar" style="font-size: 15px;">اضغط مطولاً على "مقبض السحب" لتحريك المهام للأعلى
+                                والأسفل وترتيب أولوياتك.</p>
+                            <p lang="en" style="font-size: 15px;">Long-press the "Drag Handle" to move tasks up/down and
+                                reorder your priorities.</p>
+                        </div>
+                    </div>
+                    <h3 lang="ar">الحالات المتقدمة للمهمة</h3>
+                    <h3 lang="en">Advanced Task States</h3>
+                    <ul lang="ar">
+                        <li><b>مهمة مكتملة:</b> اضغط على مربع الاختيار أو نص المهمة للاحتفال بإنجازها.</li>
+                        <li><b>مهمة فائتة (Missed):</b> اضغط على أيقونة (X) لتمييز المهمة التي لم تكتمل لتراجعها لاحقاً.
+                        </li>
+                        <li><b>اختصار النص:</b> المهام الطويلة تتقلص تلقائياً لـ 3 أسطر. اضغط "عرض المزيد" لرؤية
+                            التفاصيل.</li>
+                    </ul>
+                    <ul lang="en">
+                        <li><b>Completed:</b> Click the checkbox or task text to celebrate your achievement.</li>
+                        <li><b>Missed:</b> Click the (X) icon to mark incomplete tasks for later review.</li>
+                        <li><b>Auto-Clamp:</b> Long tasks collapse to 3 lines. Click "Show More" for full details.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Slide 3: Mass Action Features -->
+            <div class="slide">
+                <div class="slide-icon">💥</div>
+                <h2 lang="ar">3. ميزات الإضافة الجماعية</h2>
+                <h2 lang="en">3. Mass Action Features</h2>
+                <div class="content-scroll">
+                    <p lang="ar">لماذا تكرر نفسك؟ استخدم <b>"+ إضافة سريعة"</b> الموجودة في الهيدر للقيام بما يلي:</p>
+                    <ul lang="ar">
+                        <li><b>إضافة مهمة موحدة:</b> أضف مهمة واحدة أو <b>مجموعة مهام</b> (بالفاضلة(,)/الأسطر) لكل
+                            الأيام
+                            المتاحة بضغطة زر.</li>
+                        <li><b>إضافة تبويب موحد:</b> هل بدأت دورة تعليمية جديدة؟ أضف تبويب "كورس البرمجة" لكل أيام
+                            الأسبوع فوراً.</li>
+                        <li><b>تلقائية ذكية:</b> التطبيق يتجاهل الأيام المغلقة والماضية ليحافظ على دقة بياناتك.</li>
+                    </ul>
+                    <p lang="en">Why repeat yourself? Use the <b>"+ Quick Add"</b> button in the header to perform these
+                        actions:</p>
+                    <ul lang="en">
+                        <li><b>Mass Task Add:</b> Add single or <b>multiple tasks</b> (comma(,) or new line) to all
+                            available
+                            days with one click.</li>
+                        <li><b>Mass Tab Add:</b> Started a new course? Add a "Coding Course" tab to every day of the
+                            week instantly.</li>
+                        <li><b>Smart Automation:</b> The app ignores closed or past days to keep your data accurate.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Slide 4: Strategic Organization -->
+            <div class="slide">
+                <div class="slide-icon">📂</div>
+                <h2 lang="ar">4. تنظيم الأدوار (Sub-Tabs)</h2>
+                <h2 lang="en">4. Role Organization (Sub-Tabs)</h2>
+                <div class="content-scroll">
+                    <p lang="ar">نظام التبويبات الفرعية هو الحل النهائي لتشتت الأدوار:</p>
+                    <ul lang="ar">
+                        <li><b>عالم خاص لكل دور:</b> أنشئ تبويبات مثل (شغل، دراسة، مهارات، جيم). المهام لا تختلط أبداً.
+                        </li>
+                        <li><b>تبويب "المكتملة":</b> يجمع لك كل إنجازات اليوم في مكان واحد لتشعر بنشوة النجاح.</li>
+                        <li><b>طي التبويبات:</b> هل تريد هدوءاً بصرياً؟ اضغط سهم الطي لإخفاء قائمة التبويبات والتركيز
+                            على المهام فقط.</li>
+                    </ul>
+                    <p lang="en">Sub-Tabs are the ultimate solution for role confusion:</p>
+                    <ul lang="en">
+                        <li><b>Role Isolation:</b> Create tabs like (Work, Study, Skills, Gym). Tasks never mix!</li>
+                        <li><b>"Done" Tab:</b> Gathers all your day's achievements in one place for that sense of
+                            success.</li>
+                        <li><b>Collapse Tabs:</b> Need visual peace? Click the collapse arrow to hide the tab list and
+                            focus purely on tasks.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Slide 5: Focus & Visualization -->
+            <div class="slide">
+                <div class="slide-icon">🎯</div>
+                <h2 lang="ar">5. وضع التركيز الخارق</h2>
+                <h2 lang="en">5. Ultra-Focus Mode</h2>
+                <div class="content-scroll">
+                    <p lang="ar">في بحر المهام، قد يضيع يومك. هنا يأتي <b>وضع التركيز (Focus Mode)</b>:</p>
+                    <ul lang="ar">
+                        <li><b>تعتيم الضجيج:</b> عند تفعيله، يتم تعتيم وإخفاء كافة الأيام السابقة والقادمة.</li>
+                        <li><b>قوة "الآن":</b> يبقى أمامك "يومك الحالي" فقط بكل وضوح وتوهج.</li>
+                        <li><b>ملاحة ذكية:</b> يمكنك التبديل بين الأسابيع الماضية واللاحقة، لكن التركيز يظل دائماً على
+                            اليوم الذي تعيشه.</li>
+                    </ul>
+                    <p lang="en">In a sea of tasks, your day can get lost. That's why we created <b>Focus Mode</b>:</p>
+                    <ul lang="en">
+                        <li><b>Dimm the Noise:</b> When enabled, all past and future days are blurred and dimmed.</li>
+                        <li><b>Power of "Now":</b> Only "Today" remains clearly visible and glowing.</li>
+                        <li><b>Smart Nav:</b> Switch between past/future weeks, but focus always stays on the present
+                            day.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Slide 6: Motivation & Milestones -->
+            <div class="slide">
+                <div class="slide-icon">🔥</div>
+                <h2 lang="ar">6. الانضباط الحديدي (Streak)</h2>
+                <h2 lang="en">6. Iron Discipline (Streak)</h2>
+                <div class="content-scroll">
+                    <p lang="ar">عدّاد التتابع (Streak) هو الحارس الشخصي لانضباطك:</p>
+                    <ul lang="ar">
+                        <li><b>قانون الـ 24 ساعة:</b> يجب أن تفتح التطبيق وتتفاعل معه مرة واحدة على الأقل يومياً ليبقى
+                            العداد مشتعلاً.</li>
+                        <li><b>نظام الاحتفالات:</b> ستحصل على حفلة Confetti عند بلوغك (5, 10, 25, 50, 100) يوم من
+                            الاستمرار.</li>
+                        <li><b>إحصائيات معمقة:</b> اضغط على العداد لترى تاريخ آخر زيارة وأفضل تتابع حققته في تاريخك.
+                        </li>
+                    </ul>
+                    <p lang="en">The Streak counter is the bodyguard of your discipline:</p>
+                    <ul lang="en">
+                        <li><b>24-Hour Law:</b> Open the app and interact at least once a day to keep the fire burning.
+                        </li>
+                        <li><b>Confetti Milestones:</b> Celebratory showers at (5, 10, 25, 50, 100) days of consistency.
+                        </li>
+                        <li><b>Deep Stats:</b> Click the counter to see last visit date and your all-time best streak
+                            record.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Slide 7: Evaluation & Reports -->
+            <div class="slide">
+                <div class="slide-icon">📈</div>
+                <h2 lang="ar">7. التقييم والتقارير الشهرية</h2>
+                <h2 lang="en">7. Evaluation & Reports</h2>
+                <div class="content-scroll">
+                    <p lang="ar">ما لا يمكن قياسه، لا يمكن تحسينه. نوفر لك أدوات مراجعة قوية:</p>
+                    <ul lang="ar">
+                        <li><b>إغلاق اليوم:</b> فور الضغط على زر الإغلاق، يحسب التطبيق نسبة نجاحك بدقة ويعطيك درجة (A,
+                            B, C...).</li>
+                        <li><b>المراجعة الأسبوعية:</b> في نهاية الـ 7 أيام، سيطلب منك ملخصاً للأسبوع: ما تعلمته، وما
+                            ستتجنبه غداً.</li>
+                        <li><b>التقارير:</b> سجلك التاريخي الكامل متاح في قائمة الإعدادات لمراقبة منحنى تطورك عبر
+                            الأشهر.</li>
+                    </ul>
+                    <p lang="en">What can't be measured can't be improved. We provide powerful review tools:</p>
+                    <ul lang="en">
+                        <li><b>Closing Day:</b> Upon closing, the app calculates your success percentage and gives a
+                            grade (A, B, C...).</li>
+                        <li><b>Weekly Review:</b> After 7 days, provide a summary: Lessons learned & mistakes to avoid.
+                        </li>
+                        <li><b>Reports:</b> Your full historical record is available in Settings to track your monthly
+                            progress curve.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Slide 8: Data & Automation -->
+            <div class="slide">
+                <div class="slide-icon">💾</div>
+                <h2 lang="ar">8. الخصوصية والأتمتة (Auto-Export)</h2>
+                <h2 lang="en">8. Data & Auto-Export</h2>
+                <div class="content-scroll">
+                    <div class="feature-grid">
+                        <div class="feature-item">
+                            <h4 lang="ar">🔒 ملكية مطلقة</h4>
+                            <h4 lang="en">🔒 Absolute Ownership</h4>
+                            <p lang="ar" style="font-size: 14px;">بياناتك لا تلمس سيرفراتنا أبداً. هي مشفرة ومحفوظة داخل
+                                متصفحك فقط.</p>
+                            <p lang="en" style="font-size: 14px;">Your data never touches our servers. It's stored
+                                locally and encrypted in your browser.</p>
+                        </div>
+                        <div class="feature-item">
+                            <h4 lang="ar">🔄 النسخ التلقائي</h4>
+                            <h4 lang="en">🔄 Auto-Backup</h4>
+                            <p lang="ar" style="font-size: 14px;">(لمستخدمي الكمبيوتر) اختر مجلداً، وسيقوم التطبيق بحفظ
+                                نسخة Backup يومياً هناك تلقائياً.</p>
+                            <p lang="en" style="font-size: 14px;">(PC Users) Select a folder, and the app auto-saves a
+                                daily backup file there.</p>
+                        </div>
+                    </div>
+                    <p lang="ar" style="margin-top: 15px;">هل ستغير جهازك؟ استخدم ميزة <b>"تصدير البيانات"</b> و
+                        <b>"استيراد"</b> في قائمة البيانات لنقل كل تاريخك بلمح البصر.
+                    </p>
+                    <p lang="en" style="margin-top: 15px;">Switching devices? Use <b>"Export"</b> and <b>"Import"</b> in
+                        the Data menu to move your entire history instantly.</p>
+                </div>
+            </div>
+
+            <!-- Slide 9: Power Tools -->
+            <div class="slide">
+                <div class="slide-icon">🧙‍♂️</div>
+                <h2 lang="ar">9. أدوات السحرة (Dev Console)</h2>
+                <h2 lang="en">9. Power User Tools</h2>
+                <div class="content-scroll">
+                    <p lang="ar">للمستخدمين المتقدمين، يمكنك التحكم في الزمن عبر الـ Browser Console (F12):</p>
+                    <div class="code-block" lang="ar">
+                        // لفتح أي يوم أغلقت بالخطأ (1-7)<br>
+                        OpenDay(dayNumber);<br><br>
+                        // للتحكم الكامل في الـ Streak<br>
+                        StreakCommands.stats(); // لرؤية الإحصائيات<br>
+                        StreakCommands.add(5); // إضافة 5 أيام
+                    </div>
+                    <p lang="en">For power users, control time itself via the Browser Console (F12):</p>
+                    <div class="code-block" lang="en">
+                        // Unlock any accidentally closed day (1-7)<br>
+                        OpenDay(dayNumber);<br><br>
+                        // Full Streak management<br>
+                        StreakCommands.stats(); // View deep stats<br>
+                        StreakCommands.add(5); // Add 5 days
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 10: Conclusion -->
+            <div class="slide">
+                <div class="slide-icon">👑</div>
+                <h1 lang="ar">الأدوات في يدك.. انطلق!</h1>
+                <h1 lang="en">Tools in Hand.. Launch!</h1>
+                <p lang="ar" style="text-align: center; font-size: 21px; margin-top: 30px; font-weight: 300;">
+                    لقد أصبحت الآن خبيراً بكل تفاصيل <b>Week Planner</b>. <br>
+                    تذكر دائماً: النظام يحررك. الخطة الجيدة اليوم، أفضل من خطة مثالية غداً لن تراها أبداً.
+                </p>
+                <p lang="en" style="text-align: center; font-size: 21px; margin-top: 30px; font-weight: 300;">
+                    You are now an expert on every detail of <b>Week Planner</b>. <br>
+                    Remember: Systems grant freedom. A good plan today is better than a perfect plan tomorrow that never
+                    comes.
+                </p>
+                <div style="text-align: center; margin-top: 60px;">
+                    <a href="index.html" class="nav-btn"
+                        style="text-decoration: none; display: inline-flex; justify-content: center; width: auto; margin:0 auto; padding: 20px 50px; border-radius: 24px; background: var(--success); font-size: 20px;">
+                        <span lang="ar">ابدأ الآن</span>
+                        <span lang="en">Launch Success</span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Controls -->
+        <div class="slider-controls">
+            <button class="nav-btn" id="prevBtn" disabled>
+                <span lang="ar">السابق</span>
+                <span lang="en">Previous</span>
+            </button>
+
+            <div class="progress-dots" id="dotsContainer"></div>
+
+            <button class="nav-btn" id="nextBtn">
+                <span lang="ar">التالي</span>
+                <span lang="en">Next</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const dotsContainer = document.getElementById('dotsContainer');
+        let currentSlide = 0;
+
+        // Init Dots
+        slides.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (i === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => {
+                currentSlide = i;
+                updateSlider();
+            });
+            dotsContainer.appendChild(dot);
+        });
+
+        const dots = document.querySelectorAll('.dot');
+
+        function updateSlider() {
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active', 'prev');
+                if (i === currentSlide) {
+                    slide.classList.add('active');
+                } else if (i < currentSlide) {
+                    slide.classList.add('prev');
+                }
+            });
+
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+
+            prevBtn.disabled = currentSlide === 0;
+
+            if (currentSlide === slides.length - 1) {
+                nextBtn.style.opacity = '0.05';
+                nextBtn.style.pointerEvents = 'none';
+            } else {
+                nextBtn.style.opacity = '1';
+                nextBtn.style.pointerEvents = 'auto';
+            }
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                updateSlider();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlider();
+            }
+        });
+
+        // Key Navigation
+        document.addEventListener('keydown', (e) => {
+            const isRTL = document.documentElement.dir === 'rtl';
+            if (e.key === 'ArrowRight') {
+                if (isRTL) { if (currentSlide > 0) prevBtn.click(); }
+                else { if (currentSlide < slides.length - 1) nextBtn.click(); }
+            } else if (e.key === 'ArrowLeft') {
+                if (isRTL) { if (currentSlide < slides.length - 1) nextBtn.click(); }
+                else { if (currentSlide > 0) prevBtn.click(); }
+            }
+        });
+
+        function toggleLang() {
+            const body = document.body;
+            const isEn = body.classList.toggle('en-mode');
+            const html = document.documentElement;
+
+            if (isEn) {
+                html.setAttribute('dir', 'ltr');
+                html.setAttribute('lang', 'en');
+            } else {
+                html.setAttribute('dir', 'rtl');
+                html.setAttribute('lang', 'ar');
+            }
+            updateSlider();
+        }
+
+        updateSlider();
+    </script>
+</body>
+
+</html>

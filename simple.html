@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planned Week - مخطط أسبوعي</title>
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .week-number {
+            font-size: 1.5rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        /* ===== LOCKED WEEK SCREEN ===== */
+        .locked-screen {
+            background: white;
+            padding: 60px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .locked-screen h2 {
+            color: #333;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .locked-screen p {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .btn-plan-week {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-plan-week:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        /* ===== GOALS INPUT SCREEN ===== */
+        .goals-screen {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .goals-screen h2 {
+            color: #333;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .goals-textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            margin-bottom: 20px;
+        }
+
+        .goals-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn-save-goals {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .btn-save-goals:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        /* ===== SUCCESS MESSAGE ===== */
+        .success-message {
+            background: #d1fae5;
+            border: 2px solid #10b981;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .success-message p {
+            color: #065f46;
+            font-size: 1.1rem;
+            margin: 0;
+            padding-right: 40px;
+        }
+
+        .btn-close-message {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #10b981;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        .btn-close-message:hover {
+            background: #059669;
+        }
+
+        /* ===== WEEK GRID ===== */
+        .week-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* ===== DAY CARD ===== */
+        .day-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .day-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .day-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .day-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .day-body {
+            padding: 15px;
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .task-list {
+            list-style: none;
+        }
+
+        .task-item {
+            background: #f3f4f6;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .task-checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .task-text {
+            flex: 1;
+            font-size: 0.95rem;
+        }
+
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+            color: #9ca3af;
+        }
+
+        .btn-delete-task {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .btn-delete-task:hover {
+            background: #dc2626;
+        }
+
+        .day-footer {
+            padding: 15px;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+        }
+
+        .btn-add-task {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-add-task:hover {
+            background: #5568d3;
+        }
+
+        /* ===== TASK INPUT ===== */
+        .task-input-container {
+            display: none;
+            margin-bottom: 10px;
+        }
+
+        .task-input-container.active {
+            display: block;
+        }
+
+        .task-input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #667eea;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+        }
+
+        .task-input:focus {
+            outline: none;
+            border-color: #5568d3;
+        }
+
+        .task-input-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-save-task {
+            flex: 1;
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn-cancel-task {
+            flex: 1;
+            background: #6b7280;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /* ===== UTILITY CLASSES ===== */
+        .hidden {
+            display: none !important;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .week-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .week-number {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ===== HEADER: CURRENT WEEK NUMBER ===== -->
+    <div class="header">
+        <h1>Planned Week - مخطط أسبوعي</h1>
+        <div class="week-number" id="weekNumber">
+            <!-- Week number will be inserted here dynamically -->
+        </div>
+    </div>
+
+    <!-- ===== LOCKED SCREEN (shown when week is empty) ===== -->
+    <div class="locked-screen" id="lockedScreen">
+        <h2>🔒 أسبوع غير مخطط</h2>
+        <p>هذا الأسبوع لم يتم التخطيط له بعد</p>
+        <button class="btn-plan-week" id="btnPlanWeek">خطط أسبوعك</button>
+    </div>
+
+    <!-- ===== GOALS INPUT SCREEN ===== -->
+    <div class="goals-screen hidden" id="goalsScreen">
+        <h2>أهداف الأسبوع</h2>
+        <textarea class="goals-textarea" id="goalsTextarea"
+            placeholder="اكتب أهدافك للأسبوع هنا...&#10;مثال:&#10;- إنهاء المشروع&#10;- مراجعة الكود&#10;- كتابة التقارير"></textarea>
+        <button class="btn-save-goals" id="btnSaveGoals">حفظ الأهداف</button>
+    </div>
+
+    <!-- ===== SUCCESS MESSAGE ===== -->
+    <div class="success-message hidden" id="successMessage">
+        <button class="btn-close-message" id="btnCloseMessage">×</button>
+        <p>✅ ابدأ في تقسيم أهداف الأسبوع على الأيام كمهام</p>
+    </div>
+
+    <!-- ===== WEEK GRID (7 day cards) ===== -->
+    <div class="week-grid hidden" id="weekGrid">
+        <!-- Day cards will be generated dynamically -->
+    </div>
+
+    <script>
+        // ===== DATA STORAGE =====
+        const STORAGE_KEY = 'plannedWeek';
+
+        // ===== ARABIC DAY NAMES =====
+        const ARABIC_DAYS = [
+            'الأحد',    // Sunday
+            'الإثنين',  // Monday
+            'الثلاثاء', // Tuesday
+            'الأربعاء', // Wednesday
+            'الخميس',   // Thursday
+            'الجمعة',   // Friday
+            'السبت'     // Saturday
+        ];
+
+        // ===== STATE =====
+        let weekData = {
+            weekNumber: 0,
+            year: 0,
+            goals: '',
+            isPlanned: false,
+            days: []
+        };
+
+        // ===== DOM ELEMENTS =====
+        const elements = {
+            weekNumber: document.getElementById('weekNumber'),
+            lockedScreen: document.getElementById('lockedScreen'),
+            goalsScreen: document.getElementById('goalsScreen'),
+            successMessage: document.getElementById('successMessage'),
+            weekGrid: document.getElementById('weekGrid'),
+            btnPlanWeek: document.getElementById('btnPlanWeek'),
+            btnSaveGoals: document.getElementById('btnSaveGoals'),
+            btnCloseMessage: document.getElementById('btnCloseMessage'),
+            goalsTextarea: document.getElementById('goalsTextarea')
+        };
+
+        // ===== UTILITY FUNCTIONS =====
+
+        /**
+         * Calculate ISO week number for a given date
+         * @param {Date} date - The date to calculate week number for
+         * @returns {number} ISO week number (1-53)
+         */
+        function getWeekNumber(date) {
+            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            const dayNum = d.getUTCDay() || 7;
+            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        }
+
+        /**
+         * Get the start date (Monday) of a given week
+         * @param {number} year - Year
+         * @param {number} weekNumber - ISO week number
+         * @returns {Date} Start date of the week
+         */
+        function getWeekStartDate(year, weekNumber) {
+            const simple = new Date(year, 0, 1 + (weekNumber - 1) * 7);
+            const dow = simple.getDay();
+            const ISOweekStart = simple;
+            if (dow <= 4) {
+                ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
+            } else {
+                ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
+            }
+            return ISOweekStart;
+        }
+
+        /**
+         * Get all 7 dates for a given week
+         * @param {number} year - Year
+         * @param {number} weekNumber - ISO week number
+         * @returns {Array<Date>} Array of 7 dates
+         */
+        function getWeekDates(year, weekNumber) {
+            const startDate = getWeekStartDate(year, weekNumber);
+            const dates = [];
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(startDate);
+                date.setDate(startDate.getDate() + i);
+                dates.push(date);
+            }
+            return dates;
+        }
+
+        /**
+         * Save data to LocalStorage
+         */
+        function saveToStorage() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(weekData));
+        }
+
+        /**
+         * Load data from LocalStorage
+         */
+        function loadFromStorage() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                const data = JSON.parse(stored);
+                // Only load if it's the same week
+                if (data.weekNumber === weekData.weekNumber && data.year === weekData.year) {
+                    weekData = data;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // ===== INITIALIZATION =====
+
+        /**
+         * Initialize the application
+         */
+        function init() {
+            // Get current date and week number
+            const today = new Date();
+            weekData.weekNumber = getWeekNumber(today);
+            weekData.year = today.getFullYear();
+
+            // Display week number in header
+            elements.weekNumber.textContent = `الأسبوع ${weekData.weekNumber} - ${weekData.year}`;
+
+            // Initialize 7 days
+            const weekDates = getWeekDates(weekData.year, weekData.weekNumber);
+            weekData.days = weekDates.map((date, index) => ({
+                id: `day-${index}`,
+                name: ARABIC_DAYS[date.getDay()],
+                date: date.toISOString().split('T')[0],
+                tasks: []
+            }));
+
+            // Try to load existing data
+            const hasData = loadFromStorage();
+
+            // Show appropriate screen
+            if (hasData && weekData.isPlanned) {
+                showWeekGrid();
+            } else {
+                showLockedScreen();
+            }
+        }
+
+        // ===== SCREEN MANAGEMENT =====
+
+        /**
+         * Show the locked screen (empty week)
+         */
+        function showLockedScreen() {
+            elements.lockedScreen.classList.remove('hidden');
+            elements.goalsScreen.classList.add('hidden');
+            elements.successMessage.classList.add('hidden');
+            elements.weekGrid.classList.add('hidden');
+        }
+
+        /**
+         * Show the goals input screen
+         */
+        function showGoalsScreen() {
+            elements.lockedScreen.classList.add('hidden');
+            elements.goalsScreen.classList.remove('hidden');
+            elements.successMessage.classList.add('hidden');
+            elements.weekGrid.classList.add('hidden');
+
+            // Pre-fill if goals exist
+            elements.goalsTextarea.value = weekData.goals || '';
+            elements.goalsTextarea.focus();
+        }
+
+        /**
+         * Show the week grid with day cards
+         */
+        function showWeekGrid() {
+            elements.lockedScreen.classList.add('hidden');
+            elements.goalsScreen.classList.add('hidden');
+            elements.weekGrid.classList.remove('hidden');
+
+            renderWeekGrid();
+        }
+
+        // ===== WEEK GRID RENDERING =====
+
+        /**
+         * Render all 7 day cards
+         */
+        function renderWeekGrid() {
+            elements.weekGrid.innerHTML = '';
+
+            weekData.days.forEach(day => {
+                const dayCard = createDayCard(day);
+                elements.weekGrid.appendChild(dayCard);
+            });
+        }
+
+        /**
+         * Create a single day card
+         * @param {Object} day - Day data object
+         * @returns {HTMLElement} Day card element
+         */
+        function createDayCard(day) {
+            const card = document.createElement('div');
+            card.className = 'day-card';
+            card.dataset.dayId = day.id;
+
+            // Day header
+            const header = document.createElement('div');
+            header.className = 'day-header';
+            header.innerHTML = `<div class="day-name">${day.name}</div>`;
+
+            // Day body (tasks)
+            const body = document.createElement('div');
+            body.className = 'day-body';
+
+            // Task input container (hidden by default)
+            const taskInputContainer = document.createElement('div');
+            taskInputContainer.className = 'task-input-container';
+            taskInputContainer.innerHTML = `
+                <input type="text" class="task-input" placeholder="اكتب المهمة هنا...">
+                <div class="task-input-buttons">
+                    <button class="btn-save-task">حفظ</button>
+                    <button class="btn-cancel-task">إلغاء</button>
+                </div>
+            `;
+
+            // Task list
+            const taskList = document.createElement('ul');
+            taskList.className = 'task-list';
+            day.tasks.forEach(task => {
+                const taskItem = createTaskItem(task, day.id);
+                taskList.appendChild(taskItem);
+            });
+
+            body.appendChild(taskInputContainer);
+            body.appendChild(taskList);
+
+            // Day footer
+            const footer = document.createElement('div');
+            footer.className = 'day-footer';
+            footer.innerHTML = `<button class="btn-add-task">+ إضافة مهمة</button>`;
+
+            // Assemble card
+            card.appendChild(header);
+            card.appendChild(body);
+            card.appendChild(footer);
+
+            // Event listeners
+            setupDayCardEvents(card, day);
+
+            return card;
+        }
+
+        /**
+         * Create a task item element
+         * @param {Object} task - Task data
+         * @param {string} dayId - Day ID
+         * @returns {HTMLElement} Task item element
+         */
+        function createTaskItem(task, dayId) {
+            const li = document.createElement('li');
+            li.className = `task-item ${task.completed ? 'completed' : ''}`;
+            li.dataset.taskId = task.id;
+
+            li.innerHTML = `
+                <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''}>
+                <span class="task-text">${task.text}</span>
+                <button class="btn-delete-task">حذف</button>
+            `;
+
+            // Checkbox event
+            const checkbox = li.querySelector('.task-checkbox');
+            checkbox.addEventListener('change', (e) => {
+                toggleTaskCompletion(dayId, task.id, e.target.checked);
+            });
+
+            // Delete button event
+            const deleteBtn = li.querySelector('.btn-delete-task');
+            deleteBtn.addEventListener('click', () => {
+                deleteTask(dayId, task.id);
+            });
+
+            return li;
+        }
+
+        /**
+         * Setup event listeners for a day card
+         * @param {HTMLElement} card - Day card element
+         * @param {Object} day - Day data
+         */
+        function setupDayCardEvents(card, day) {
+            const addBtn = card.querySelector('.btn-add-task');
+            const inputContainer = card.querySelector('.task-input-container');
+            const taskInput = card.querySelector('.task-input');
+            const saveBtn = card.querySelector('.btn-save-task');
+            const cancelBtn = card.querySelector('.btn-cancel-task');
+
+            // Show input when add button clicked
+            addBtn.addEventListener('click', () => {
+                inputContainer.classList.add('active');
+                taskInput.focus();
+            });
+
+            // Save task
+            const saveTask = () => {
+                const text = taskInput.value.trim();
+                if (text) {
+                    addTask(day.id, text);
+                    taskInput.value = '';
+                    inputContainer.classList.remove('active');
+                }
+            };
+
+            saveBtn.addEventListener('click', saveTask);
+            taskInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    saveTask();
+                }
+            });
+
+            // Cancel
+            cancelBtn.addEventListener('click', () => {
+                taskInput.value = '';
+                inputContainer.classList.remove('active');
+            });
+        }
+
+        // ===== TASK MANAGEMENT =====
+
+        /**
+         * Add a new task to a day
+         * @param {string} dayId - Day ID
+         * @param {string} text - Task text
+         */
+        function addTask(dayId, text) {
+            const day = weekData.days.find(d => d.id === dayId);
+            if (day) {
+                const task = {
+                    id: `task-${Date.now()}`,
+                    text: text,
+                    completed: false
+                };
+                day.tasks.push(task);
+                saveToStorage();
+                renderWeekGrid();
+            }
+        }
+
+        /**
+         * Toggle task completion status
+         * @param {string} dayId - Day ID
+         * @param {string} taskId - Task ID
+         * @param {boolean} completed - Completion status
+         */
+        function toggleTaskCompletion(dayId, taskId, completed) {
+            const day = weekData.days.find(d => d.id === dayId);
+            if (day) {
+                const task = day.tasks.find(t => t.id === taskId);
+                if (task) {
+                    task.completed = completed;
+                    saveToStorage();
+                    renderWeekGrid();
+                }
+            }
+        }
+
+        /**
+         * Delete a task
+         * @param {string} dayId - Day ID
+         * @param {string} taskId - Task ID
+         */
+        function deleteTask(dayId, taskId) {
+            const day = weekData.days.find(d => d.id === dayId);
+            if (day) {
+                day.tasks = day.tasks.filter(t => t.id !== taskId);
+                saveToStorage();
+                renderWeekGrid();
+            }
+        }
+
+        // ===== EVENT HANDLERS =====
+
+        /**
+         * Handle "Plan Week" button click
+         */
+        elements.btnPlanWeek.addEventListener('click', () => {
+            showGoalsScreen();
+        });
+
+        /**
+         * Handle "Save Goals" button click
+         */
+        elements.btnSaveGoals.addEventListener('click', () => {
+            const goals = elements.goalsTextarea.value.trim();
+
+            if (goals) {
+                weekData.goals = goals;
+                weekData.isPlanned = true;
+                saveToStorage();
+
+                // Show success message
+                elements.successMessage.classList.remove('hidden');
+
+                // Show week grid
+                showWeekGrid();
+            } else {
+                alert('الرجاء كتابة أهداف الأسبوع');
+            }
+        });
+
+        /**
+         * Handle close message button click
+         */
+        elements.btnCloseMessage.addEventListener('click', () => {
+            elements.successMessage.classList.add('hidden');
+        });
+
+        // ===== START APPLICATION =====
+        init();
+    </script>
+</body>
+
+</html>
