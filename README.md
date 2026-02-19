@@ -1,6 +1,14 @@
 # 🚀 Week Planner
 **The Ultimate Minimalist Weekly Planner & Productivity Engine.**
 
+<div align="center">
+  <a href="https://alyamer101.github.io/WeekPlanner/">
+    <img src="https://img.shields.io/badge/LIVE%20DEMO-🚀-success?style=for-the-badge&logo=github&logoColor=white" alt="Live Demo" />
+  </a>
+</div>
+
+<br/>
+
 ![Status](https://img.shields.io/badge/Status-Completed-success)
 ![Language](https://img.shields.io/badge/Language-English%20%2F%20Arabic-blue)
 ![Tech](https://img.shields.io/badge/Tech-Vanilla%20JS-yellow)
@@ -62,7 +70,3 @@ The project requires no build process or installation:
 ## 👨‍💻 Developed By
 **Aly Amer**
 - [LinkedIn Profile](https://www.linkedin.com/in/eng-aly-amer/)
-
----
-
-> *"A good plan today is better than a perfect plan tomorrow that you never see."*
