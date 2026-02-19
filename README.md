@@ -1,4 +1,4 @@
-# 🚀 Week Planner (Planned Weak)
+# 🚀 Week Planner
 **The Ultimate Minimalist Weekly Planner & Productivity Engine.**
 
 ![Status](https://img.shields.io/badge/Status-Completed-success)
