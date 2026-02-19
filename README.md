@@ -62,7 +62,6 @@ The project requires no build process or installation:
 ## 👨‍💻 Developed By
 **Aly Amer**
 - [LinkedIn Profile](https://www.linkedin.com/in/eng-aly-amer/)
-- [Project Portfolio](https://alyamer.github.io/)
 
 ---
 
